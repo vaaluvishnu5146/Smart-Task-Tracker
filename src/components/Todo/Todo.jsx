@@ -1,10 +1,13 @@
 import { useState } from "react";
 import TextInput from "../TextInput/TextInput";
-import TodoCard from "./TodoCard";
+import TodoCard from "./TodoList";
+import ListRender from "./ListRender";
+import GridRender from "./GridRender";
 
 function Todo() {
   const [todo, setTodo] = useState("");
   const [todos, setTodos] = useState([]);
+  const [layoutType, setLayoutType] = useState("list"); // list or grid
 
   function saveTodo(e) {
     let data = {};
@@ -36,9 +39,13 @@ function Todo() {
     setTodos(todosCopy);
   }
 
+  function toggleLayout(e) {
+    setLayoutType(e.target.id);
+  }
+
   return (
-    <section className="w-screen h-screen bg-blue-400">
-      <div className="h-[30%] flex items-center justify-center" id="todoForm">
+    <div className="h-full bg-zinc-100 px-[50px] py-[20px] box-border">
+      <div className="h-[20%] flex items-center justify-center" id="todoForm">
         <TextInput
           id="taskInput1"
           placeholder="Enter your new task"
@@ -47,42 +54,45 @@ function Todo() {
           value={todo}
         />
       </div>
-      <div className="h-[70%] flex flex-col items-center" id="todoListing">
-        <div className="w-[50%] h-auto mb-5" id="todoSection">
-          <h3 className="text-italic mb-3">Todo</h3>
-          <div className="flex flex-col gap-y-3" id="todoItems">
-            {todos
-              .filter((el) => el.isCompleted == false)
-              .map((el) => (
-                <TodoCard
-                  id={el.id}
-                  key={el.id}
-                  title={el.title}
-                  isCompleted={el.isCompleted}
-                  handleCompletion={handleCompletionChange}
-                  handleDelete={handleDelete}
-                />
-              ))}
-          </div>
-        </div>
-        <div className="w-[50%] h-auto" id="completedSection">
-          <h3 className="text-italic mb-3">Completed</h3>
-          <div className="flex flex-col gap-y-3" id="completedItems">
-            {todos
-              .filter((el) => el.isCompleted == true)
-              .map((el) => (
-                <TodoCard
-                  id={el.id}
-                  key={el.id}
-                  title={el.title}
-                  isCompleted={el.isCompleted}
-                  handleCompletion={handleCompletionChange}
-                />
-              ))}
-          </div>
-        </div>
+      <div className="w-full h-[10%] flex items-center justify-end gap-x-3">
+        <button
+          className={`w-[35px] h-[35px] rounded cursor-pointer shadow-2xs ${
+            layoutType === "list" ? "bg-purple-300" : "bg-white"
+          }`}
+          id="list"
+          onClick={toggleLayout}
+        >
+          <i class="fa-solid fa-list"></i>
+        </button>
+        <button
+          className={`w-[35px] h-[35px] rounded cursor-pointer shadow-2xs bg-purple-300  ${
+            layoutType === "grid" ? "bg-purple-300" : "bg-white"
+          }`}
+          id="grid"
+          onClick={toggleLayout}
+        >
+          <i class="fa-solid fa-table-cells-large"></i>
+        </button>
       </div>
-    </section>
+      <div
+        className="w-full h-[70%] flex flex-col items-center"
+        id="todoListing"
+      >
+        {layoutType == "list" ? (
+          <ListRender
+            data={todos}
+            handleDelete={handleDelete}
+            handleCompletionChange={handleCompletionChange}
+          />
+        ) : (
+          <GridRender
+            data={todos}
+            handleDelete={handleDelete}
+            handleCompletionChange={handleCompletionChange}
+          />
+        )}
+      </div>
+    </div>
   );
 }
 
