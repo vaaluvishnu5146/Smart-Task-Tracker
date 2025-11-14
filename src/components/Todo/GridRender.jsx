@@ -23,6 +23,7 @@ export default function GridRender({
                   isCompleted={el.isCompleted}
                   handleCompletion={handleCompletionChange}
                   handleDelete={handleDelete}
+                  color={el.color}
                 />
               ))}
           </div>
@@ -38,6 +39,7 @@ export default function GridRender({
                   isCompleted={el.isCompleted}
                   handleCompletion={handleCompletionChange}
                   handleDelete={handleDelete}
+                  color={el.color}
                 />
               ))}
           </div>

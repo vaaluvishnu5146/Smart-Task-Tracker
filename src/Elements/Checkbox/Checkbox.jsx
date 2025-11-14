@@ -7,13 +7,13 @@ export default function Checkbox({
   onChange = () => {},
 }) {
   return (
-    <label className="flex items-center space-x-2 cursor-pointer mb-2">
+    <label className="flex items-center space-x-2 cursor-pointer">
       <input
         id={id}
         type="checkbox"
         checked={checked}
         onChange={onChange}
-        className="appearance-none h-5 w-5 border border-gray-300 rounded-md checked:bg-purple-400 checked:border-purple-500"
+        className="appearance-none h-5 w-5 border-2 border-black rounded-md checked:bg-purple-400 checked:border-purple-500"
       />
       <span className="relative">
         {/* <!-- Custom checkmark (e.g., SVG or pseudo-element) --> */}

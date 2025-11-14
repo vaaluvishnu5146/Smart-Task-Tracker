@@ -7,15 +7,20 @@ export default function TodoCard({
   isCompleted = false,
   handleCompletion = () => {},
   handleDelete = () => {},
+  color = "",
 }) {
   return (
-    <div id={id} className="bg-white rounded h-auto p-3 box-border">
+    <div
+      id={id}
+      className={`rounded h-auto p-3 box-border ${color ? color : "bg-white"}`}
+    >
       <Checkbox
         id={id}
         type="checkbox"
         onChange={handleCompletion}
         checked={isCompleted}
       />
+      <div className="mb-3"></div>
       <p className="mb-2">{title}</p>
       <div className="flex justify-end">
         <button

@@ -24,6 +24,8 @@ export default function ListRender({
                     isCompleted={el.isCompleted}
                     handleCompletion={handleCompletionChange}
                     handleDelete={handleDelete}
+                    color={el.color}
+                    tag={el.tag}
                   />
                 ))}
             </div>
@@ -40,6 +42,8 @@ export default function ListRender({
                     title={el.title}
                     isCompleted={el.isCompleted}
                     handleCompletion={handleCompletionChange}
+                    color={el.color}
+                    tag={el.tag}
                   />
                 ))}
             </div>

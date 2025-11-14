@@ -5,8 +5,11 @@ import ListRender from "./ListRender";
 import GridRender from "./GridRender";
 
 function Todo() {
+  const tags = ["personal", "official"];
   const [todo, setTodo] = useState("");
   const [todos, setTodos] = useState([]);
+  const [color, setColor] = useState("bg-white");
+  const [tag, setTag] = useState(null);
   const [layoutType, setLayoutType] = useState("list"); // list or grid
 
   function saveTodo(e) {
@@ -16,10 +19,14 @@ function Todo() {
         id: uuidv4(),
         title: todo.trim(),
         isCompleted: false,
+        color,
+        tag: tag,
       };
       const todosCopy = [...todos, data];
       setTodos(todosCopy);
       setTodo("");
+      setTag("");
+      setColor("bg-white");
     }
   }
 
@@ -43,6 +50,19 @@ function Todo() {
     setLayoutType(e.target.id);
   }
 
+  function handleColorPicker(e) {
+    if (e.target.id != "" && e.target.id != null) {
+      setColor(e.target.id);
+    }
+  }
+
+  function handleTagCheck(e) {
+    console.log(e);
+    if (e.target.id != "" && e.target.id != null) {
+      setTag(e.target.id);
+    }
+  }
+
   return (
     <div className="h-full bg-zinc-100 px-[50px] py-[20px] box-border">
       <div className="h-[20%] flex items-center justify-center" id="todoForm">
@@ -52,6 +72,10 @@ function Todo() {
           cb={setTodo}
           onSubmit={saveTodo}
           value={todo}
+          handleColorPicker={handleColorPicker}
+          color={color}
+          handleTagCheck={handleTagCheck}
+          tagSelected={tag}
         />
       </div>
       <div className="w-full h-[10%] flex items-center justify-end gap-x-3">
