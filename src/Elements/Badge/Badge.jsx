@@ -11,7 +11,7 @@ export default function Badge({
     <div
       id={id}
       onClick={handleTagCheck}
-      className={`w-auto h-[30px] rounded-md px-3 py-3 box-border flex gap-x-3 items-center justify-center ${
+      className={`cursor-pointer w-auto h-[30px] rounded-md px-3 py-3 box-border flex gap-x-3 items-center justify-center ${
         color ? color : "bg-zinc-200"
       }`}
     >

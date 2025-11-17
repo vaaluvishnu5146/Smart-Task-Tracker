@@ -17,21 +17,21 @@ export default function TextInput(props) {
           <span
             id="bg-white"
             onClick={props.handleColorPicker}
-            className="w-[35px] h-[35px] rounded-full flex justify-center items-center border border-black"
+            className="w-[35px] h-[35px] rounded-full flex justify-center items-center border border-black cursor-pointer"
           >
             {props.color === "bg-white" && <i class="fa-solid fa-check"></i>}
           </span>
           <span
             id="bg-blue-200"
             onClick={props.handleColorPicker}
-            className="w-[35px] h-[35px] rounded-full flex justify-center items-center bg-blue-200 border-2 border-blue-500"
+            className="w-[35px] h-[35px] rounded-full flex justify-center items-center bg-blue-200 border-2 border-blue-500 cursor-pointer"
           >
             {props.color === "bg-blue-200" && <i class="fa-solid fa-check"></i>}
           </span>
           <span
             id="bg-yellow-200"
             onClick={props.handleColorPicker}
-            className="w-[35px] h-[35px] rounded-full flex justify-center items-center bg-yellow-200 border-2 border-yellow-500"
+            className="w-[35px] h-[35px] rounded-full flex justify-center items-center bg-yellow-200 border-2 border-yellow-500 cursor-pointer"
           >
             {props.color === "bg-yellow-200" && (
               <i class="fa-solid fa-check"></i>
@@ -40,14 +40,14 @@ export default function TextInput(props) {
           <span
             id="bg-red-200"
             onClick={props.handleColorPicker}
-            className="w-[35px] h-[35px] rounded-full flex justify-center items-center bg-red-200 border-2 border-red-500"
+            className="w-[35px] h-[35px] rounded-full flex justify-center items-center bg-red-200 border-2 border-red-500 cursor-pointer"
           >
             {props.color === "bg-red-200" && <i class="fa-solid fa-check"></i>}
           </span>
           <span
             id="bg-orange-200"
             onClick={props.handleColorPicker}
-            className="w-[35px] h-[35px] rounded-full flex justify-center items-center bg-orange-200 border-2 border-orange-500"
+            className="w-[35px] h-[35px] rounded-full flex justify-center items-center bg-orange-200 border-2 border-orange-500 cursor-pointer"
           >
             {props.color === "bg-orange-200" && (
               <i class="fa-solid fa-check"></i>

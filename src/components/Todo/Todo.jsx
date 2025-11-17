@@ -21,6 +21,7 @@ function Todo() {
         isCompleted: false,
         color,
         tag: tag,
+        createdAt: new Date(),
       };
       const todosCopy = [...todos, data];
       setTodos(todosCopy);
