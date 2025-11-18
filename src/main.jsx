@@ -1,6 +1,11 @@
 import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
-import Parent from "./Parent.jsx";
-import Todo from "./components/Todo/Todo.jsx";
+import { createTheme, ThemeProvider } from "flowbite-react";
 
-createRoot(document.getElementById("root")).render(<Todo />);
+const customTheme = createTheme({});
+
+createRoot(document.getElementById("root")).render(
+  <ThemeProvider theme={customTheme}>
+    <App />
+  </ThemeProvider>
+);

@@ -6,6 +6,7 @@ export default function ListRender({
   data = [],
   handleCompletionChange = () => {},
   handleDelete = () => {},
+  onEdit = () => {},
 }) {
   return (
     <section className="w-full">
@@ -26,6 +27,7 @@ export default function ListRender({
                     handleDelete={handleDelete}
                     color={el.color}
                     tag={el.tag}
+                    onEdit={onEdit}
                   />
                 ))}
             </div>

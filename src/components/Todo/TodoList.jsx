@@ -24,6 +24,13 @@ export default function TodoListItem(props) {
         <button
           className="w-[50px] h-[50px] bg-transparent"
           id={props.id}
+          onClick={() => props.onEdit(props.id)}
+        >
+          <i class="fa-solid fa-pencil"></i>
+        </button>
+        <button
+          className="w-[50px] h-[50px] bg-transparent"
+          id={props.id}
           onClick={props.handleDelete}
         >
           <i className="fa-solid fa-trash"></i>
