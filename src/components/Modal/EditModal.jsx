@@ -69,13 +69,7 @@ export function EditModal({
           </div>
         </ModalBody>
         <ModalFooter>
-          <Button
-            color="alternative"
-            onClick={() => {
-              handleUpdate();
-              setOpenModal(false);
-            }}
-          >
+          <Button color="alternative" onClick={handleUpdate}>
             Save
           </Button>
           <Button color="alternative" onClick={() => setOpenModal(false)}>

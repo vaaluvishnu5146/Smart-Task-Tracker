@@ -1,9 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TextInput from "../TextInput/TextInput";
 import TodoCard from "./TodoList";
 import ListRender from "./ListRender";
 import GridRender from "./GridRender";
 import { EditModal } from "../Modal/EditModal";
+import {
+  syncActionItemsWithLocalStorage,
+  retreiveActionItemsFromLocalStorage,
+} from "../../utils/localstorageSync";
 
 function Todo() {
   const [updateId, setUpdateId] = useState(null);
@@ -14,6 +18,13 @@ function Todo() {
   const [layoutType, setLayoutType] = useState("list"); // list or grid
   const [openModal, setOpenModal] = useState(false);
 
+  useEffect(() => {
+    const todos = retreiveActionItemsFromLocalStorage();
+    if (todos) {
+      setTodos(todos);
+    }
+  }, []);
+
   function saveTodo(e) {
     let data = {};
     if (e.code == "Enter" && todo.trim().length > 0) {
@@ -23,10 +34,13 @@ function Todo() {
         isCompleted: false,
         color,
         tag: tag,
+        isDeleted: false,
+        isArchived: false,
         createdAt: new Date(),
       };
       const todosCopy = [...todos, data];
       setTodos(todosCopy);
+      syncActionItemsWithLocalStorage(todosCopy);
       resetFormState();
     }
   }
@@ -40,11 +54,18 @@ function Todo() {
       return todo;
     });
     setTodos(todosCopy);
+    syncActionItemsWithLocalStorage(todosCopy);
   }
 
   function handleDelete(e) {
-    const todosCopy = [...todos].filter((todo) => todo.id != e.target.id);
+    const todosCopy = [...todos].map((todo) => {
+      if (todo.id == e.target.id) {
+        todo.isDeleted = true;
+      }
+      return todo;
+    });
     setTodos(todosCopy);
+    syncActionItemsWithLocalStorage(todosCopy);
   }
 
   function toggleLayout(e) {
@@ -78,6 +99,7 @@ function Todo() {
       return e;
     });
     setTodos(updatedTodos);
+    syncActionItemsWithLocalStorage(todosCopy);
     resetFormState();
   }
 
@@ -86,6 +108,7 @@ function Todo() {
     setTodo("");
     setColor("bg-white");
     setTag("personal");
+    setOpenModal(false);
   }
 
   return (
@@ -139,7 +162,7 @@ function Todo() {
       >
         {layoutType == "list" ? (
           <ListRender
-            data={todos}
+            data={todos.filter((e) => !e.isDeleted)}
             handleDelete={handleDelete}
             handleCompletionChange={handleCompletionChange}
             onEdit={(id) => {
