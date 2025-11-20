@@ -1,15 +1,13 @@
 import { useEffect, useState } from "react";
+import { Button } from "flowbite-react";
 import TextInput from "../TextInput/TextInput";
-import TodoCard from "./TodoList";
 import ListRender from "./ListRender";
 import GridRender from "./GridRender";
 import { EditModal } from "../Modal/EditModal";
-import {
-  syncActionItemsWithLocalStorage,
-  retreiveActionItemsFromLocalStorage,
-} from "../../utils/localstorageSync";
+import { Axios } from "axios";
 
 function Todo() {
+  const HttpClient = new Axios();
   const [updateId, setUpdateId] = useState(null);
   const [todo, setTodo] = useState("");
   const [todos, setTodos] = useState([]);
@@ -19,53 +17,89 @@ function Todo() {
   const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
-    const todos = retreiveActionItemsFromLocalStorage();
-    if (todos) {
-      setTodos(todos);
-    }
+    fetchTodos();
   }, []);
+
+  function fetchTodos() {
+    // FETCH doing GET method
+    HttpClient.get(`http://localhost:3000/todos`)
+      .then((response) => {
+        if (response) {
+          const { data = [] } = JSON.parse(response.data);
+          setTodos(data);
+        }
+      })
+      .catch((e) => console.log(e));
+  }
 
   function saveTodo(e) {
     let data = {};
     if (e.code == "Enter" && todo.trim().length > 0) {
       data = {
-        id: uuidv4(),
         title: todo.trim(),
-        isCompleted: false,
-        color,
+        color: color,
         tag: tag,
         isDeleted: false,
         isArchived: false,
-        createdAt: new Date(),
+        isCompleted: false,
+        userId: "6815b6d9a95876b0ab5168df",
       };
-      const todosCopy = [...todos, data];
-      setTodos(todosCopy);
-      syncActionItemsWithLocalStorage(todosCopy);
+
+      // Fire POST request and store the data in db
+      fetch(`http://localhost:3000/todos/createTodo`, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((result) => {
+          if (result) {
+            fetchTodos();
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
       resetFormState();
     }
   }
 
   function handleCompletionChange(e) {
-    const todosCopy = [...todos];
-    todosCopy.map((todo) => {
-      if (todo.id === e.target.id) {
-        todo.isCompleted = e.target.checked;
-      }
-      return todo;
-    });
-    setTodos(todosCopy);
-    syncActionItemsWithLocalStorage(todosCopy);
+    // Fire PATCH request and store the data in db
+    fetch(`http://localhost:3000/todos/updateTodo/${e.target.id}`, {
+      method: "PATCH",
+      body: JSON.stringify({ isCompleted: e.target.checked }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        if (result) fetchTodos();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   function handleDelete(e) {
-    const todosCopy = [...todos].map((todo) => {
-      if (todo.id == e.target.id) {
-        todo.isDeleted = true;
-      }
-      return todo;
-    });
-    setTodos(todosCopy);
-    syncActionItemsWithLocalStorage(todosCopy);
+    // Fire PATCH request and store the data in db
+    fetch(`http://localhost:3000/todos/updateTodo/${e.target.id}`, {
+      method: "PATCH",
+      body: JSON.stringify({ isDeleted: true }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        if (result) fetchTodos();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   function toggleLayout(e) {
@@ -86,29 +120,45 @@ function Todo() {
   }
 
   function handleUpdateTask(e) {
-    const updatedTodos = todos.map((e) => {
-      if (e.id == updateId) {
-        const updatedTask = {
-          ...e,
+    let matchingTask = todos.find((e) => e._id == updateId);
+
+    if (matchingTask) {
+      // Fire PATCH request and store the updated todo data in db
+      fetch(`http://localhost:3000/todos/updateTodo/${updateId}`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          ...matchingTask,
           title: todo,
           tag: tag,
           color: color,
-        };
-        return updatedTask;
-      }
-      return e;
-    });
-    setTodos(updatedTodos);
-    syncActionItemsWithLocalStorage(todosCopy);
-    resetFormState();
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((result) => {
+          if (result) {
+            fetchTodos();
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {
+          resetFormState();
+        });
+    } else {
+      console.log("No Todo Selected");
+    }
   }
 
   function resetFormState() {
+    setOpenModal(false);
     setUpdateId(null);
     setTodo("");
     setColor("bg-white");
     setTag("personal");
-    setOpenModal(false);
   }
 
   return (
@@ -137,24 +187,26 @@ function Todo() {
           task={todo}
           handleUpdate={handleUpdateTask}
         />
-        <button
-          className={`w-[35px] h-[35px] rounded cursor-pointer shadow-2xs ${
+        <Button
+          color={"alternative"}
+          className={`rounded cursor-pointer shadow-2xs ${
             layoutType === "list" ? "bg-purple-300" : "bg-white"
           }`}
           id="list"
           onClick={toggleLayout}
         >
-          <i class="fa-solid fa-list"></i>
-        </button>
-        <button
-          className={`w-[35px] h-[35px] rounded cursor-pointer shadow-2xs bg-purple-300  ${
+          <i class="fa-solid fa-list"></i>&nbsp;&nbsp;List
+        </Button>
+        <Button
+          color={"alternative"}
+          className={`rounded cursor-pointer shadow-2xs ${
             layoutType === "grid" ? "bg-purple-300" : "bg-white"
           }`}
           id="grid"
           onClick={toggleLayout}
         >
-          <i class="fa-solid fa-table-cells-large"></i>
-        </button>
+          <i class="fa-solid fa-table-cells-large"></i>&nbsp;&nbsp;Grid
+        </Button>
       </div>
       <div
         className="w-full h-[70%] flex flex-col items-center"
@@ -166,8 +218,8 @@ function Todo() {
             handleDelete={handleDelete}
             handleCompletionChange={handleCompletionChange}
             onEdit={(id) => {
-              const matchingTask = todos.find((e) => e.id == id);
-              setUpdateId(matchingTask.id);
+              const matchingTask = todos.find((e) => e._id == id);
+              setUpdateId(matchingTask._id);
               setOpenModal(!openModal);
               setTodo(matchingTask.title);
               setTag(matchingTask.tag);
@@ -176,7 +228,7 @@ function Todo() {
           />
         ) : (
           <GridRender
-            data={todos}
+            data={todos.filter((e) => !e.isDeleted)}
             handleDelete={handleDelete}
             handleCompletionChange={handleCompletionChange}
             onEdit={setOpenModal}

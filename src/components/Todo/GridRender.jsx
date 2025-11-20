@@ -11,37 +11,19 @@ export default function GridRender({
     <section className="w-full">
       {data.length > 0 ? (
         <>
-          <h2 className="mb-3">Todo</h2>
+          <h2 className="mb-3">Action Items</h2>
           <div className="grid grid-cols-4 gap-3 mb-5">
-            {data
-              .filter((el) => el.isCompleted == false)
-              .map((el) => (
-                <TodoCard
-                  id={el.id}
-                  key={el.id}
-                  title={el.title}
-                  isCompleted={el.isCompleted}
-                  handleCompletion={handleCompletionChange}
-                  handleDelete={handleDelete}
-                  color={el.color}
-                />
-              ))}
-          </div>
-          <h2 className="mb-3">Completed</h2>
-          <div className="grid grid-cols-4 gap-3">
-            {data
-              .filter((el) => el.isCompleted != false)
-              .map((el) => (
-                <TodoCard
-                  id={el.id}
-                  key={el.id}
-                  title={el.title}
-                  isCompleted={el.isCompleted}
-                  handleCompletion={handleCompletionChange}
-                  handleDelete={handleDelete}
-                  color={el.color}
-                />
-              ))}
+            {data.map((el) => (
+              <TodoCard
+                id={el._id}
+                key={el._id}
+                title={el.title}
+                isCompleted={el.isCompleted}
+                handleCompletion={handleCompletionChange}
+                handleDelete={handleDelete}
+                color={el.color}
+              />
+            ))}
           </div>
         </>
       ) : (

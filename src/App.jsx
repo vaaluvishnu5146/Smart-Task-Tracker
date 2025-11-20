@@ -3,6 +3,7 @@ import Todo from "./components/Todo/Todo";
 import "./App.css";
 import Archive from "./Pages/Archive";
 import Trash from "./Pages/Trash";
+import Cloud from "./Pages/Cloud";
 
 function App() {
   return (
@@ -50,6 +51,19 @@ function App() {
               <i class="fa-solid fa-trash"></i>
               <p>Trash</p>
             </NavLink>
+            <NavLink
+              className={({ isActive, isPending }) =>
+                isPending
+                  ? ""
+                  : isActive
+                  ? "cursor-pointer flex h-[50px] p-5 box-border items-center gap-x-5 bg-purple-300"
+                  : "cursor-pointer flex h-[50px] p-5 box-border items-center gap-x-5"
+              }
+              to={"/cloud"}
+            >
+              <i class="fa-solid fa-trash"></i>
+              <p>Cloud</p>
+            </NavLink>
           </ul>
         </div>
         <div className="w-full h-[10%]">Settings</div>
@@ -59,6 +73,7 @@ function App() {
           <Route index element={<Todo />} />
           <Route path="archive" element={<Archive />} />
           <Route path="trash" element={<Trash />} />
+          <Route path="cloud" element={<Cloud />} />
         </Routes>
       </div>
     </section>
