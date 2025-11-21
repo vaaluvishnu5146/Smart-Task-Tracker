@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import ListRender from "../components/Todo/ListRender";
 import { useEffect } from "react";
+import ToggleListing from "../components/ToggleListing/ToggleListing";
+import { ListingTypeContext } from "../context/ListingTypeContext";
 
 export default function Cloud() {
   const [todos, setTodos] = useState([]);
+  const { isListlayout, toggleLayout } = useContext(ListingTypeContext);
 
   useEffect(() => {
     // FETCH doing GET method

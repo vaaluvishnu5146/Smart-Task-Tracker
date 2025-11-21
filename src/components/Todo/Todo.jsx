@@ -1,19 +1,19 @@
-import { useEffect, useState } from "react";
-import { Button } from "flowbite-react";
+import { useEffect, useState, useContext } from "react";
 import TextInput from "../TextInput/TextInput";
 import ListRender from "./ListRender";
 import GridRender from "./GridRender";
 import { EditModal } from "../Modal/EditModal";
 import { Axios } from "axios";
+import { ListingTypeContext } from "../../context/ListingTypeContext";
 
 function Todo() {
+  const { isListlayout, toggleLayout } = useContext(ListingTypeContext);
   const HttpClient = new Axios();
   const [updateId, setUpdateId] = useState(null);
   const [todo, setTodo] = useState("");
   const [todos, setTodos] = useState([]);
   const [color, setColor] = useState("bg-white");
   const [tag, setTag] = useState("personal");
-  const [layoutType, setLayoutType] = useState("list"); // list or grid
   const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
@@ -102,10 +102,6 @@ function Todo() {
       });
   }
 
-  function toggleLayout(e) {
-    setLayoutType(e.target.id);
-  }
-
   function handleColorPicker(e) {
     if (e.target.id != "" && e.target.id != null) {
       setColor(e.target.id);
@@ -162,8 +158,11 @@ function Todo() {
   }
 
   return (
-    <div className="h-full bg-zinc-100 px-[50px] py-[20px] box-border">
-      <div className="h-[20%] flex items-center justify-center" id="todoForm">
+    <div>
+      <div
+        className="h-[20%] flex items-center justify-center mb-5"
+        id="todoForm"
+      >
         <TextInput
           id="taskInput1"
           placeholder="Enter your new task"
@@ -187,32 +186,12 @@ function Todo() {
           task={todo}
           handleUpdate={handleUpdateTask}
         />
-        <Button
-          color={"alternative"}
-          className={`rounded cursor-pointer shadow-2xs ${
-            layoutType === "list" ? "bg-purple-300" : "bg-white"
-          }`}
-          id="list"
-          onClick={toggleLayout}
-        >
-          <i class="fa-solid fa-list"></i>&nbsp;&nbsp;List
-        </Button>
-        <Button
-          color={"alternative"}
-          className={`rounded cursor-pointer shadow-2xs ${
-            layoutType === "grid" ? "bg-purple-300" : "bg-white"
-          }`}
-          id="grid"
-          onClick={toggleLayout}
-        >
-          <i class="fa-solid fa-table-cells-large"></i>&nbsp;&nbsp;Grid
-        </Button>
       </div>
       <div
         className="w-full h-[70%] flex flex-col items-center"
         id="todoListing"
       >
-        {layoutType == "list" ? (
+        {isListlayout ? (
           <ListRender
             data={todos.filter((e) => !e.isDeleted)}
             handleDelete={handleDelete}
